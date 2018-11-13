@@ -30,14 +30,14 @@ public class OpenWeather {
     private static String nombrePais(String codigoPais) {
         String json = "";
         try {
-            URLConnection connection = new URL("https://restcountries.eu/rest/v2/alpha/" + codigoPais + "?fields=name;").openConnection();
+            URLConnection connection = new URL("https://restcountries.eu/rest/v2/alpha/" + codigoPais + "?fields=translations;").openConnection();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String linea;
             while ((linea = bufferedReader.readLine()) != null) {
                 json += linea;
             }
             JSONParser parser = new JSONParser();
-            return (String) ((JSONObject) parser.parse(json)).get("name");
+            return (String) ((JSONObject) ((JSONObject) parser.parse(json)).get("translations")).get("es");
         } catch (Exception e) {
             e.printStackTrace();
         }
