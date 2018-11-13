@@ -27,6 +27,23 @@ public class OpenWeather {
         return respuesta;
     }
 
+    private static String nombrePais(String codigoPais) {
+        String json = "";
+        try {
+            URLConnection connection = new URL("https://restcountries.eu/rest/v2/alpha/" + codigoPais + "?fields=name;").openConnection();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String linea;
+            while ((linea = bufferedReader.readLine()) != null) {
+                json += linea;
+            }
+            JSONParser parser = new JSONParser();
+            return (String) ((JSONObject) parser.parse(json)).get("name");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private static String seleccionarCiudad() {
         System.out.println("Seleccione ciudad:\n" +
                 "1- Madrid\n" +
@@ -56,6 +73,7 @@ public class OpenWeather {
         JSONObject rootObject = (JSONObject) parser.parse(json);
         String nombreCiudad = (String) rootObject.get("name");
         String icono = (String) ((JSONObject) ((JSONArray) rootObject.get("weather")).get(0)).get("icon");
+        String codigoPais = (String) ((JSONObject) rootObject.get("sys")).get("country");
         double tempActual = (double) ((JSONObject) rootObject.get("main")).get("temp") - KELVIN;
         double temp_min = (double) ((JSONObject) rootObject.get("main")).get("temp_min") - KELVIN;
         double temp_max = (double) ((JSONObject) rootObject.get("main")).get("temp_max") - KELVIN;
@@ -63,7 +81,7 @@ public class OpenWeather {
         Date fecha = new Date((long) rootObject.get("dt") * 1000);
         Date amanecer = new Date((long) ((JSONObject) rootObject.get("sys")).get("sunrise") * 1000);
         Date ocaso = new Date((long) ((JSONObject) rootObject.get("sys")).get("sunset") * 1000);
-        return new Prediccion(nombreCiudad, icono, tempActual, temp_min, temp_max, humedad, fecha, amanecer, ocaso);
+        return new Prediccion(nombreCiudad, icono, codigoPais, tempActual, temp_min, temp_max, humedad, fecha, amanecer, ocaso);
     }
 
     private static String generarHTML(Prediccion prediccion) {
@@ -74,6 +92,7 @@ public class OpenWeather {
                 "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css\">\n" +
                 "</head>\n<body>\n" +
                 "<div style=\"text-align: center;\"><h1>" + prediccion.getNombreCiudad() + "</h1>\n" +
+                "<h3>" + nombrePais(prediccion.getCodigoPais()) + "</h3>" +
                 "<h2><img src=\"http://openweathermap.org/img/w/" + prediccion.getIcono() + ".png\" style='height: 100px; width: auto;'></h2>\n" +
                 "<h4>Temperatura actual: " + String.format("%.1f", prediccion.getTempActual()) + "</h4>" +
                 "<h5>" + fechaFormateada + "</h5></div>\n" +
