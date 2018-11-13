@@ -2,14 +2,15 @@ import java.util.Date;
 
 public class Prediccion {
 
-    private String nombreCiudad, icono;
+    private String nombreCiudad, icono, codigoPais;
     private double tempActual, tempMin, tempMax;
     private long humedad;
     private Date fecha, amanecer, ocaso;
 
-    public Prediccion(String nombreCiudad, String icono, double tempActual, double tempMin, double tempMax, long humedad, Date fecha, Date amanecer, Date ocaso) {
+    public Prediccion(String nombreCiudad, String icono, String codigoPais, double tempActual, double tempMin, double tempMax, long humedad, Date fecha, Date amanecer, Date ocaso) {
         this.nombreCiudad = nombreCiudad;
         this.icono = icono;
+        this.codigoPais = codigoPais;
         this.tempActual = tempActual;
         this.tempMin = tempMin;
         this.tempMax = tempMax;
@@ -53,5 +54,9 @@ public class Prediccion {
 
     public double getTempActual() {
         return tempActual;
+    }
+
+    public String getCodigoPais() {
+        return codigoPais;
     }
 }
