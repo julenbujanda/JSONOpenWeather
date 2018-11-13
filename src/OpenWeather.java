@@ -3,10 +3,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.BufferedReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.awt.*;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
@@ -16,16 +14,41 @@ import java.util.Scanner;
 public class OpenWeather {
 
     private final static double KELVIN = 273.15;
+    private static Scanner scanner;
 
-    private static String descargarJSON(String ciudad) throws IOException {
+    private static String descargarJSON() throws IOException {
         String respuesta = "";
-        URLConnection connection = new URL("http://api.openweathermap.org/data/2.5/weather?q=" + ciudad + "&appid=57703a7a9ab7b873a99116a3ea379748").openConnection();
+        URLConnection connection = new URL("http://api.openweathermap.org/data/2.5/weather?q=" + seleccionarCiudad() + "&appid=57703a7a9ab7b873a99116a3ea379748").openConnection();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String linea;
         while ((linea = bufferedReader.readLine()) != null) {
             respuesta += linea;
         }
         return respuesta;
+    }
+
+    private static String seleccionarCiudad() {
+        System.out.println("Seleccione ciudad:\n" +
+                "1- Madrid\n" +
+                "2- Villaviciosa de Odón\n" +
+                "3- Vitoria-Gasteiz\n" +
+                "4- Donostia-San Sebastián\n" +
+                "5- Seleccionar otra ciudad");
+        switch (scanner.nextInt()) {
+            case 1:
+                return "Madrid";
+            case 2:
+                return "Villaviciosa de Odón";
+            case 3:
+                return "Vitoria-Gasteiz";
+            case 4:
+                return "Donostia-San Sebastián";
+            case 5:
+                scanner.nextLine();
+                System.out.println("Indique el nombre de la ciudad: ");
+                return scanner.nextLine();
+        }
+        return null;
     }
 
     private static Prediccion parsearJSON(String json) throws ParseException {
@@ -40,7 +63,6 @@ public class OpenWeather {
         Date fecha = new Date((long) rootObject.get("dt") * 1000);
         Date amanecer = new Date((long) ((JSONObject) rootObject.get("sys")).get("sunrise") * 1000);
         Date ocaso = new Date((long) ((JSONObject) rootObject.get("sys")).get("sunset") * 1000);
-        System.out.println((String) ((JSONObject) rootObject.get("sys")).get("country"));
         return new Prediccion(nombreCiudad, icono, tempActual, temp_min, temp_max, humedad, fecha, amanecer, ocaso);
     }
 
@@ -53,13 +75,13 @@ public class OpenWeather {
                 "</head>\n<body>\n" +
                 "<div style=\"text-align: center;\"><h1>" + prediccion.getNombreCiudad() + "</h1>\n" +
                 "<h2><img src=\"http://openweathermap.org/img/w/" + prediccion.getIcono() + ".png\" style='height: 100px; width: auto;'></h2>\n" +
-                "<h2>Temperatura actual: " + String.format("%.1f",prediccion.getTempActual()) + "</h2>" +
-                "<h2>" + fechaFormateada + "</h2></div>\n" +
+                "<h4>Temperatura actual: " + String.format("%.1f", prediccion.getTempActual()) + "</h4>" +
+                "<h5>" + fechaFormateada + "</h5></div>\n" +
                 "<table class='centered' style='margin: auto; width: 800px'>\n<tbody>\n" +
                 "<tr><td>Amanecer</td><td>Ocaso</td><td>T. Máxima</td><td>T. Mínima</td></tr>\n" +
                 "<tr><td>" + formateadorHora.format(prediccion.getAmanecer()) + "</td>" +
                 "<td>" + formateadorHora.format(prediccion.getOcaso()) + "</td>" +
-                "<td>" + String.format("%.1f",prediccion.getTempMax()) + "</td><td>" + String.format("%.1f",prediccion.getTempMin()) + "</td></tr>\n";
+                "<td>" + String.format("%.1f", prediccion.getTempMax()) + "</td><td>" + String.format("%.1f", prediccion.getTempMin()) + "</td></tr>\n";
         // language=HTML
         html += "\n</tbody></table>\n</body>\n</html>\n";
         return html;
@@ -77,8 +99,13 @@ public class OpenWeather {
     }
 
     public static void main(String[] args) throws IOException, ParseException {
-        Scanner scanner = new Scanner(System.in);
-        generarFichero(generarHTML(parsearJSON(descargarJSON(scanner.nextLine()))));
+        scanner = new Scanner(System.in);
+        try {
+            generarFichero(generarHTML(parsearJSON(descargarJSON())));
+            Desktop.getDesktop().browse(new File("prediccion.html").toURI());
+        } catch (FileNotFoundException e) {
+            System.out.println("Ciudad no encontrada.");
+        }
     }
 
 }
