@@ -2,15 +2,17 @@ import java.util.Date;
 
 public class Prediccion {
 
-    private String nombreCiudad;
-    private double temp_min, temp_max;
+    private String nombreCiudad, icono;
+    private double tempActual, tempMin, tempMax;
     private long humedad;
     private Date fecha, amanecer, ocaso;
 
-    public Prediccion(String nombreCiudad, double temp_min, double temp_max, long humedad, Date fecha, Date amanecer, Date ocaso) {
+    public Prediccion(String nombreCiudad, String icono, double tempActual, double tempMin, double tempMax, long humedad, Date fecha, Date amanecer, Date ocaso) {
         this.nombreCiudad = nombreCiudad;
-        this.temp_min = temp_min;
-        this.temp_max = temp_max;
+        this.icono = icono;
+        this.tempActual = tempActual;
+        this.tempMin = tempMin;
+        this.tempMax = tempMax;
         this.humedad = humedad;
         this.fecha = fecha;
         this.amanecer = amanecer;
@@ -21,12 +23,16 @@ public class Prediccion {
         return nombreCiudad;
     }
 
-    public double getTemp_min() {
-        return temp_min;
+    public String getIcono() {
+        return icono;
     }
 
-    public double getTemp_max() {
-        return temp_max;
+    public double getTempMin() {
+        return tempMin;
+    }
+
+    public double getTempMax() {
+        return tempMax;
     }
 
     public long getHumedad() {
@@ -44,5 +50,8 @@ public class Prediccion {
     public Date getFecha() {
         return fecha;
     }
-    
+
+    public double getTempActual() {
+        return tempActual;
+    }
 }
