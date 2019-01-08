@@ -79,6 +79,7 @@ public class OpenWeather {
         double temp_min = (double) mainObject.get("temp_min") - KELVIN;
         double temp_max = (double) mainObject.get("temp_max") - KELVIN;
         long humedad = (long) mainObject.get("humidity");
+        // Multiplica por 1000 para pasar el epoch de segundos a milisegundos
         Date fecha = new Date((long) rootObject.get("dt") * 1000);
         Date amanecer = new Date((long) ((JSONObject) rootObject.get("sys")).get("sunrise") * 1000);
         Date ocaso = new Date((long) ((JSONObject) rootObject.get("sys")).get("sunset") * 1000);
