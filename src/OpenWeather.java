@@ -74,7 +74,7 @@ public class OpenWeather {
         String nombreCiudad = (String) rootObject.get("name");
         String icono = (String) ((JSONObject) ((JSONArray) rootObject.get("weather")).get(0)).get("icon");
         String codigoPais = (String) ((JSONObject) rootObject.get("sys")).get("country");
-        var mainObject=(JSONObject)rootObject.get("main");
+        JSONObject mainObject = (JSONObject) rootObject.get("main");
         double tempActual = (double) mainObject.get("temp") - KELVIN;
         double temp_min = (double) mainObject.get("temp_min") - KELVIN;
         double temp_max = (double) mainObject.get("temp_max") - KELVIN;
