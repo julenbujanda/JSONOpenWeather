@@ -89,7 +89,7 @@ public class OpenWeather {
         String fechaFormateada = new SimpleDateFormat("dd/MM/YYYY").format(prediccion.getFecha());
         SimpleDateFormat formateadorHora = new SimpleDateFormat("HH:mm");
         // language=HTML
-        String html = "<html\n><head>\n<meta charset='UTF-8'>\n" +
+        String html = "<html\n><head><title>"+prediccion.getNombreCiudad()+" - Predicción</title>\n<meta charset='UTF-8'>\n" +
                 "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css\">\n" +
                 "</head>\n<body>\n" +
                 "<div style=\"text-align: center;\"><h1>" + prediccion.getNombreCiudad() + "</h1>\n" +
