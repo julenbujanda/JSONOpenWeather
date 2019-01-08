@@ -74,10 +74,11 @@ public class OpenWeather {
         String nombreCiudad = (String) rootObject.get("name");
         String icono = (String) ((JSONObject) ((JSONArray) rootObject.get("weather")).get(0)).get("icon");
         String codigoPais = (String) ((JSONObject) rootObject.get("sys")).get("country");
-        double tempActual = (double) ((JSONObject) rootObject.get("main")).get("temp") - KELVIN;
-        double temp_min = (double) ((JSONObject) rootObject.get("main")).get("temp_min") - KELVIN;
-        double temp_max = (double) ((JSONObject) rootObject.get("main")).get("temp_max") - KELVIN;
-        long humedad = (long) ((JSONObject) rootObject.get("main")).get("humidity");
+        var mainObject=(JSONObject)rootObject.get("main");
+        double tempActual = (double) mainObject.get("temp") - KELVIN;
+        double temp_min = (double) mainObject.get("temp_min") - KELVIN;
+        double temp_max = (double) mainObject.get("temp_max") - KELVIN;
+        long humedad = (long) mainObject.get("humidity");
         Date fecha = new Date((long) rootObject.get("dt") * 1000);
         Date amanecer = new Date((long) ((JSONObject) rootObject.get("sys")).get("sunrise") * 1000);
         Date ocaso = new Date((long) ((JSONObject) rootObject.get("sys")).get("sunset") * 1000);
@@ -97,7 +98,7 @@ public class OpenWeather {
                 "<h4>Temperatura actual: " + String.format("%.1f", prediccion.getTempActual()) + "</h4>" +
                 "<h5>" + fechaFormateada + "</h5></div>\n" +
                 "<table class='centered' style='margin: auto; width: 800px'>\n<tbody>\n" +
-                "<tr><td>Amanecer</td><td>Ocaso</td><td>T. Máxima</td><td>T. Mínima</td></tr>\n" +
+                "<tr><td>Amanecer</td><td>Ocaso</td><td>T. Máxima Actual</td><td>T. Mínima Actual</td></tr>\n" +
                 "<tr><td>" + formateadorHora.format(prediccion.getAmanecer()) + "</td>" +
                 "<td>" + formateadorHora.format(prediccion.getOcaso()) + "</td>" +
                 "<td>" + String.format("%.1f", prediccion.getTempMax()) + "</td><td>" + String.format("%.1f", prediccion.getTempMin()) + "</td></tr>\n";
